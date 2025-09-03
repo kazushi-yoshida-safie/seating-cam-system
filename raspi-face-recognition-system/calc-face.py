@@ -3,11 +3,18 @@ from datetime import datetime
 import numpy as np
 from picamera2 import Picamera2
 import face_recognition
+from pathlib import Path
 
+IMAGE_WIDTH: int = 1280
+IMAGE_HEIGHT: int = 720
+IMAGE_FORMAT: str = "RGB888"
+OUTPUT_DIR: Path = Path("encording")
+
+DETECTION_MODEL: str = "cnn"
 def find_and_save_features(image_array, output_txt_path):
     try:
         print("画像データから顔を検出しています...")
-        face_locations = face_recognition.face_locations(image_array, model="cnn") #ここはhogだと精度が悪い(けどcnnは遅い)
+        face_locations = face_recognition.face_locations(image_array, model=DETECTION_MODEL) #ここはhogだと精度が悪い(けどcnnは遅い)
 
         if not face_locations:
             print("-> 顔が検出されませんでした。")
@@ -19,10 +26,10 @@ def find_and_save_features(image_array, output_txt_path):
             return False
 
         face_encoding = face_recognition.face_encodings(image_array, face_locations)
-
+        single_face_encoding = face_encoding[0]
         with open(output_txt_path, 'w') as f:
             print(f"特徴量をファイルに書き込んでいます: {output_txt_path}")
-            encoding_str = ','.join(map(str, face_encoding))
+            encoding_str = ','.join(map(str, single_face_encoding))
             f.write(encoding_str + '\n')
             print("顔の特徴量を保存しました。")
 
@@ -35,7 +42,7 @@ def find_and_save_features(image_array, output_txt_path):
 
 if __name__ == "__main__":
     picam2 = Picamera2()
-    camera_config = picam2.create_still_configuration(main={"size": (1280, 720), "format": "RGB888"})
+    camera_config = picam2.create_still_configuration(main={"size": (IMAGE_WIDTH, IMAGE_HEIGHT), "format": IMAGE_FORMAT})
     picam2.configure(camera_config)
 
     print("カメラを起動します...")
@@ -51,7 +58,7 @@ if __name__ == "__main__":
     print("カメラ終了しました。")
 
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    feature_file_path = f"encording/features_{timestamp}.txt"
+    feature_file_path = OUTPUT_DIR / f"features_{timestamp}.txt"
 
     success = find_and_save_features(image, feature_file_path)
 
