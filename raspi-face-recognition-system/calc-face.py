@@ -18,15 +18,13 @@ def find_and_save_features(image_array, output_txt_path):
             print("複数の顔が検出されました")
             return False
 
-        face_encodings = face_recognition.face_encodings(image_array, face_locations)
+        face_encoding = face_recognition.face_encodings(image_array, face_locations)
 
         with open(output_txt_path, 'w') as f:
             print(f"特徴量をファイルに書き込んでいます: {output_txt_path}")
-
-            for i, encoding in enumerate(face_encodings):
-                encoding_str = ','.join(map(str, encoding))
-                f.write(encoding_str + '\n')
-                print(f"  - {i+1}番目の顔の特徴量を保存しました。")
+            encoding_str = ','.join(map(str, face_encoding))
+            f.write(encoding_str + '\n')
+            print("顔の特徴量を保存しました。")
 
         print("特徴量の保存が完了しました。")
         return True
@@ -53,7 +51,7 @@ if __name__ == "__main__":
     print("カメラ終了しました。")
 
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    feature_file_path = f"features_{timestamp}.txt"
+    feature_file_path = f"encording/features_{timestamp}.txt"
 
     success = find_and_save_features(image, feature_file_path)
 
