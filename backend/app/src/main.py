@@ -2,10 +2,9 @@
 import httpx
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, EmailStr
-from dotenv import load_dotenv
 from backend.app.src.core import config
 # .envファイルから環境変数を読み込む
-load_dotenv()
+
 
 # FastAPIアプリケーションを初期化
 app = FastAPI(

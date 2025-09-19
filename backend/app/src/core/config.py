@@ -1,6 +1,7 @@
 import os
-
+from dotenv import load_dotenv
 # 環境変数からSlackトークンを取得
+load_dotenv()
 USER_TOKEN = os.getenv("SLACK_USER_OAUTH_TOKEN")
 BOT_TOKEN = os.getenv("SLACK_BOT_OAUTH_TOKEN")
 
