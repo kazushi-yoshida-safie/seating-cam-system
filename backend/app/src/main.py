@@ -1,9 +1,9 @@
-import os
+
 import httpx
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from dotenv import load_dotenv
-
+from backend.app.src.core import config
 # .envファイルから環境変数を読み込む
 load_dotenv()
 
@@ -12,20 +12,6 @@ app = FastAPI(
     title="Slack Full Name Updater", # 説明を変更
     description="Update a Slack user's full name using their email address." # 説明を変更
 )
-
-# 環境変数からSlackトークンを取得
-USER_TOKEN = os.getenv("SLACK_USER_OAUTH_TOKEN")
-BOT_TOKEN = os.getenv("SLACK_BOT_OAUTH_TOKEN")
-
-# APIのエンドポイントを叩く際のヘッダーを定義
-USER_AUTH_HEADER = {"Authorization": f"Bearer {USER_TOKEN}"}
-BOT_AUTH_HEADER = {"Authorization": f"Bearer {BOT_TOKEN}"}
-
-# Slack APIのURL (変更なし)
-SLACK_API_URL_LOOKUP = "https://slack.com/api/users.lookupByEmail"
-SLACK_API_URL_PROFILE_SET = "https://slack.com/api/users.profile.set"
-
-
 # 【変更点1】リクエストボディの型を定義
 class UpdateFullNameRequest(BaseModel):
     email: EmailStr
@@ -38,7 +24,7 @@ async def update_full_name(request: UpdateFullNameRequest):
     """
     指定されたメールアドレスのSlackユーザーの氏名を変更します。
     """
-    if not USER_TOKEN or not BOT_TOKEN:
+    if not config.USER_TOKEN or not config.BOT_TOKEN:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="OAuth tokens are not configured in the environment."
@@ -50,8 +36,8 @@ async def update_full_name(request: UpdateFullNameRequest):
         # --- ステップ1: メールアドレスからユーザーIDを取得 ---
         try:
             response_lookup = await client.get(
-                SLACK_API_URL_LOOKUP,
-                headers=BOT_AUTH_HEADER,
+                config.SLACK_API_URL_LOOKUP,
+                headers=config.BOT_AUTH_HEADER,
                 params={"email": request.email}
             )
             response_lookup.raise_for_status()
@@ -86,8 +72,8 @@ async def update_full_name(request: UpdateFullNameRequest):
                 "user": user_id
             }
             response_profile = await client.post(
-                SLACK_API_URL_PROFILE_SET,
-                headers=USER_AUTH_HEADER,
+                config.SLACK_API_URL_PROFILE_SET,
+                headers=config.USER_AUTH_HEADER,
                 json=profile_data
             )
             response_profile.raise_for_status()
