@@ -55,4 +55,3 @@ CREATE TABLE recognition_logs (
     FOREIGN KEY (device_id) REFERENCES devices(device_id)
 );
 
-
