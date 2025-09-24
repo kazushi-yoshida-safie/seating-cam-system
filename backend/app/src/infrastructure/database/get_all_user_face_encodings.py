@@ -1,6 +1,8 @@
 import psycopg2
 import os
 
+#ローカルにおけるpostgres環境用
+#auroraになる場合はここを変更
 def get_all_user_face_encodings():
     conn = None
     try:
@@ -15,18 +17,17 @@ def get_all_user_face_encodings():
             sql = "SELECT user_id, face_encoding FROM users;"
             cur.execute(sql)   
             rows = cur.fetchall()
-            
-            print("データの取得に成功しました。")
+            print("====SUCCESS====\nget data!")
             return rows
 
     except psycopg2.Error as e:
-        print(f"データベースエラー: {e}")
+        print(f"database error: {e}")
         return None
         
     finally:
         if conn is not None:
             conn.close()
-            print("データベース接続をクローズしました。")
+            print("closed database")
 
 
 # ==================test case==================
