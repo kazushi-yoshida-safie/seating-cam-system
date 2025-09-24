@@ -12,5 +12,16 @@ services:
       - "5432:5432"
     volumes:
       - ./src/infrastructure/database/init-db:/docker-entrypoint-initdb.d
+  # backend:
+  #   build: .
+  #   container_name: backend-container
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./src:/src
+  #   environment:
+  #     - DATABASE_URL=postgresql://test:test@db:5432/seating-db
+  #   depends_on:
+  #     - db
 # volumes:
 #   db-data:
