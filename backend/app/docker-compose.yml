@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: seating-db-container
+    environment:
+      - POSTGRES_DB=seating-db
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./src/infrastructure/database/init-db:/docker-entrypoint-initdb.d
+# volumes:
+#   db-data:
