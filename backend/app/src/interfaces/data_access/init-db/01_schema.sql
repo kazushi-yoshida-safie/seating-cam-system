@@ -13,7 +13,7 @@ CREATE TABLE users (
     password_hasj VARCHAR(256),
     slack_id VARCHAR(256) UNIQUE NOT NULL,
     role_id INT,
-    face_encoding VARCHAR(256),
+    face_encoding TEXT,
     profile_image_url VARCHAR(256),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
