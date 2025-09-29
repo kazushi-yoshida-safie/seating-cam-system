@@ -11,8 +11,14 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./src/infrastructure/database/init-db:/docker-entrypoint-initdb.d
-  # backend:
+      - ./src/interfaces/data_access/init-db:/docker-entrypoint-initdb.d
+  api:
+    build: ./src/interfaces/api
+    container_name: api-server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
   #   build: .
   #   container_name: backend-container
   #   ports:
