@@ -1,5 +1,6 @@
 version: '3.8'
 
+#command docker exec -it seating-db-container psql -U test -d seating-db
 services:
   db:
     image: postgres:15
