@@ -20,6 +20,8 @@ services:
       - "8000:8000"
     volumes:
       - ./src:/app/src
+    environment:
+      - PYTHONPATH=/app/src
   #   build: .
   #   container_name: backend-container
   #   ports:
