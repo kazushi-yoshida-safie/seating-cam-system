@@ -29,15 +29,7 @@ class FaceComparator:
                    不正な入力の場合は非常に大きな値を返す。
         
         ---
-        使用例:
-        all_users = user_repo.get_all_users() # DBから全ユーザー取得
-        comparator = FaceComparator()
-        
-        for user in all_users:
-            distance = comparator.calculate_distance(new_encoding, user.face_encoding)
-            if distance < 0.6:
-                print(f"一致: {user.name}")
-                break
+        特徴量精度は後でここをいじる
         """
         # 1. 両方の文字列を数値ベクトルに変換
         pi_vector = self._parse_encoding_str(encoding_from_pi_str)
