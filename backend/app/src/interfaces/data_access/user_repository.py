@@ -1,16 +1,9 @@
 import psycopg2
 import os
-
+from domain.config import db_config
 class UserRepository:
     def __init__(self):
-        db_connection_params = {
-            "dbname": os.environ.get("POSTGRES_DB", "seating-db"),
-            "user": os.environ.get("POSTGRES_USER", "test"),
-            "password": os.environ.get("POSTGRES_PASSWORD", "test"),
-            "host": "db",
-            "port": "5432"
-        }
-        self.db_params = db_connection_params
+        self.db_params = db_config.to_dict()
 
     def get_all_user_face_encodings(self) -> list | None:
         conn = None
@@ -33,7 +26,26 @@ class UserRepository:
                 conn.close()
                 print("closed database")
 
-# ================== 使い方（実行例） ==================
+    def get_user_email(self,find_user_id):
+        conn = None
+        try:
+            conn = psycopg2.connect(**self.db_params)
+            with conn.cursor() as cur:
+                sql = "SELECT email FROM users WHERE user_id = %s;"
+                cur.execute(sql,(find_user_id,))   
+                result = cur.fetchone()
+                print("========SUCCESS========\n  get email data!\n=======================")
+                return result[0]
+
+        except psycopg2.Error as e:
+            print(f"database error: {e}")
+            return None
+            
+        finally:
+            if conn is not None:
+                conn.close()
+                print("closed database")
+# ================== テスト ==================
 # if __name__ == "__main__":
 #     # 1. データベースの接続情報を辞書として準備
 #     db_connection_params = {
