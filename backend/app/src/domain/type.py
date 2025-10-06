@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from dataclasses import dataclass
 class RaspiData(BaseModel):
-    device_id: str
+    device_id: int
     encord: str
 
 @dataclass
