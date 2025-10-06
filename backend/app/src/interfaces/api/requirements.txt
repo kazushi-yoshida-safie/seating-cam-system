@@ -1,3 +1,7 @@
 fastapi[all]
 psycopg2-binary
 numpy
+pytz
+datetime
+httpx
+asyncio
