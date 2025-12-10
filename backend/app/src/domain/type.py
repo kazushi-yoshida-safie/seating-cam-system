@@ -10,3 +10,6 @@ class User:
     user_id: str
     name: str
     face_encoding_str: str # DBから取得した文字列形式の特徴量
+
+class Psycopg2Error(Exception):
+    pass
