@@ -35,7 +35,7 @@ class SeatingRecorder:
             if conn is not None:
                 conn.close()
 
-    def recording_devices_and_seats_table(self,device_id):
+    def recording_devices_and_seats_table(self,user,device_id):
      conn = psycopg2.connect(**self.db_params)
      try:
         # withステートメントでカーソルを管理し、自動的に閉じる
@@ -61,10 +61,10 @@ class SeatingRecorder:
             # ステップ2: 取得したseat_idを使ってseatsテーブルを更新する
             sql_update_seat = """
                 UPDATE seats
-                SET is_active = TRUE
+                SET is_active = TRUE,seating_user = %s
                 WHERE seat_id = %s;
             """
-            cursor.execute(sql_update_seat, (seat_id,))
+            cursor.execute(sql_update_seat, (user,seat_id))
             print(f"シート(id={seat_id})をアクティブ化しました。")
 
         # 2つの更新処理が両方成功した場合、変更をデータベースに確定(コミット)
