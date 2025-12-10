@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,HTTPException
 import uvicorn
 from application.find_user import FindUser
 from interfaces.data_access.seats_info import SeatsInfo
+from domain.type import Psycopg2Error
 
 from domain.type import RaspiData
 # FastAPIアプリケーションのインスタンスを作成
@@ -22,9 +23,14 @@ def receive_data_from_raspi(data: RaspiData):
 
 @app.get("/all-seats-info/{department_id}")
 def receice_seats_info(department_id: int):
-    app = SeatsInfo()
-    app.res_seats_info(department_id)
-    return {"department_id": department_id}
+    try:
+        app = SeatsInfo()
+        res = app.res_seats_info(department_id)
+        return {"status": "success", "data": res}
+    except  ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Psycopg2Error as p:
+        raise HTTPException(status_code=500, detail=str(p))
 # ルートエンドポイント
 @app.get("/")
 def read_root():
