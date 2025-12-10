@@ -7,7 +7,7 @@ class SeatsInfo:
         self.db_params = db_config.to_dict()
     
     def res_seats_info(self,department_id:int):
-        sql="""SELECT seat_id,is_active,created_at FROM seats WHERE department_id = %s;"""
+        sql="""SELECT seat_id,is_active,seating_user,created_at FROM seats WHERE department_id = %s;"""
         try:
             with psycopg2.connect(**self.db_params) as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cursor:
