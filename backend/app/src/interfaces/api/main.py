@@ -22,7 +22,7 @@ def receive_data_from_raspi(data: RaspiData):
     return {"status": "success", "received_message": data.encord}
 
 @app.get("/all-seats-info/{department_id}")
-def receice_seats_info(department_id: int):
+def receive_seats_info(department_id: int):
     try:
         app = SeatsInfo()
         res = app.res_seats_info(department_id)
