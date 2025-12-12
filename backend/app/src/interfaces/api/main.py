@@ -12,7 +12,7 @@ app = FastAPI()
 
 
 # POSTリクエストを受け取るエンドポイントを定義
-@app.post("/receive-encording")
+@app.post("/receive-encoding")
 def receive_data_from_raspi(data: RaspiData):
     print(f"  deviceID: {data.device_id}")
     print(f"  message: {data.encord}")
