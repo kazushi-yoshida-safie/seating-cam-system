@@ -41,8 +41,6 @@ class SeatingRecorder:
         # withステートメントでカーソルを管理し、自動的に閉じる
         with conn.cursor() as cursor:
             
-            # ステップ1: devicesテーブルを更新し、関連するseat_idを取得する
-            # 💡 UPDATE ... RETURNING を使うと、更新と同時に値を取得できて効率的です
             sql_update_device = """
                 UPDATE devices 
                 SET is_active = TRUE 
@@ -58,7 +56,6 @@ class SeatingRecorder:
             seat_id = result[0] # 取得したseat_id
             print(f"デバイス(id={device_id})をアクティブ化しました。関連シートID: {seat_id}")
 
-            # ステップ2: 取得したseat_idを使ってseatsテーブルを更新する
             sql_update_seat = """
                 UPDATE seats
                 SET is_active = TRUE,seating_user = %s
@@ -67,13 +64,15 @@ class SeatingRecorder:
             cursor.execute(sql_update_seat, (user,seat_id))
             print(f"シート(id={seat_id})をアクティブ化しました。")
 
-        # 2つの更新処理が両方成功した場合、変更をデータベースに確定(コミット)
         conn.commit()
         print("✅ トランザクションが正常にコミットされました。")
 
      except (Exception, psycopg2.Error) as e:
-        print(f"❌ エラーが発生したため、変更をロールバックします: {e}")
-        # エラーが発生した場合は、ここまでの変更をすべて取り消す(ロールバック)
+        print(f"error : {e}")
         conn.rollback()
+     finally:
+         if conn is not None:
+             print("conn closed")
+             conn.close()
 
 
