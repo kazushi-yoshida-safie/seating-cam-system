@@ -8,8 +8,10 @@ class SeatsInfo:
     
     def res_seats_info(self,department_id:int):
         sql="""SELECT seat_id,is_active,seating_user,created_at FROM seats WHERE department_id = %s;"""
+        conn = None
         try:
-            with psycopg2.connect(**self.db_params) as conn:
+            conn = psycopg2.connect(**self.db_params)
+            with conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cursor:
                     cursor.execute(sql,(department_id, ))
                     res = cursor.fetchall()
