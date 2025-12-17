@@ -33,7 +33,7 @@ class FindUser:
         # ログの追加
         self.recorder.recording_logs(best_match_user,data.device_id,True)
         #seatsとdevicesテーブルの更新
-        self.recorder.recording_devices_and_seats_table(data.device_id)
+        self.recorder.recording_devices_and_seats_table(best_match_user,data.device_id)
         #Slackの送信
         asyncio.run(self.slack.update_slack_status(best_match_user))
         print("API STATE ALL SUCCESS!!")
