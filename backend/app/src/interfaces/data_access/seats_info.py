@@ -22,8 +22,6 @@ class SeatsInfo:
                 return res
         except psycopg2.Error as e:
             print(f"database-error : {e}")
-            if conn:
-                conn.rollback()
             raise Psycopg2Error("department not found")
         finally:
             if conn is not None:
